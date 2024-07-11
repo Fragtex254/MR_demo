@@ -69,6 +69,7 @@ export class Player extends CharacterBase {
             if (btn) {
                 btn.node.active = true;
             }
+            this.joyStick.enabled = false;
         }
     }
 
