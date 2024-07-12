@@ -17,21 +17,21 @@ const { ccclass, property } = _decorator;
 export class Player extends CharacterBase {
 
     @property(JoyStick) joyStick: JoyStick;
-    @property(Prefab) weapon: Prefab;
-    weaponPoint: Node;
-    curWeapon: Node;
     tempSpeed:number = 40;
 
     start() {
         super.start();
-        this.weaponPoint = this.node.getChildByName("WeaponPoint");
-        this.curWeapon = instantiate(this.weapon);
-        this.curWeapon.setPosition(this.weaponPoint.position);
-        this.node.addChild(this.curWeapon);
+
+        super.setLife(50);
+
+        // this.weaponPoint = this.node.getChildByName("WeaponPoint");
+        // this.curWeapon = instantiate(this.weapon);
+        // this.curWeapon.setPosition(this.weaponPoint.position);
+        // this.node.addChild(this.curWeapon);
     }
 
     update(deltaTime: number) {
-        if (this.currentPlayerState.life < 0) {
+        if (this.isDead()) {
             this.node.destroy();
             return;
         }
@@ -57,10 +57,10 @@ export class Player extends CharacterBase {
         // radian = Math.atan2(ny, nx);
         // Player.fireDirection = v2(nx, ny);
         // }
-        var angle = radian / Math.PI * 180;
-        Global.weaponAngle = angle;
-        this.curWeapon.angle = angle;
-        this.body.linearVelocity = v2(nx, ny);
+        // var angle = radian / Math.PI * 180;
+        // Global.weaponAngle = angle;
+        // this.curWeapon.angle = angle;
+        // this.body.linearVelocity = v2(nx, ny);
 
     }
 
@@ -78,7 +78,7 @@ export class Player extends CharacterBase {
     }
 
     override onEndContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact): void {
-        log("[CJH]: Player End Contact");
+        // log("[CJH]: Player End Contact");
         if (otherCollider.group === 512) {
             const btn = otherCollider.node.getComponentInChildren(Button);
             if (btn) {

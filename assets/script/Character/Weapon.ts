@@ -18,18 +18,18 @@ export class Weapon extends Component {
 
     // 以秒为单位的时间间隔
     interval: number = 1;
-    fireSudioSource: AudioSource;
+    fireAudioSource: AudioSource;
 
     start() {
-        this.fireSudioSource= this.getComponent(AudioSource);
-        var cb = function () {
-            var firePoint = this.node.getChildByName("FirePoint");
-            Global.weaponBullets.worldPosition = firePoint.worldPosition;
-            var _bullet = instantiate(this.bullet);
-            Global.weaponBullets.addChild(_bullet);
-            this.fireSudioSource.play();
-        };
-        this.schedule(cb, this.interval);
+        // this.fireAudioSource= this.getComponent(AudioSource);
+        // var cb = function () {
+        //     var firePoint = this.node.getChildByName("FirePoint");
+        //     Global.weaponBullets.worldPosition = firePoint.worldPosition;
+        //     var _bullet = instantiate(this.bullet);
+        //     Global.weaponBullets.addChild(_bullet);
+        //     this.fireAudioSource.play();
+        // };
+        // this.schedule(cb, this.interval);
     }
 
     update(deltaTime: number) {

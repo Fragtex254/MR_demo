@@ -48,7 +48,7 @@ export class CharacterBase extends Component {
         this.damageLabel = this.node.getComponentInChildren(Label);
         this.damageLabel.color = new Color(255, 255, 255, 0);
 
-        this.node.on("hurt", this.onHurt, this);
+        // this.node.on("hurt", this.onHurt, this);
 
         let attackArea = this.getComponent(CircleCollider2D);
         if (attackArea) {
@@ -114,12 +114,10 @@ export class CharacterBase extends Component {
     }
 
     onHurt(damage: number) {
-        // this.currentPlayerState.life -= damage;
 
-
+        log("[CJH]:hurt");
         this.curCharacterLife -= damage;
         this.damageLabel.string = `-${damage}`;
-        // this.lifeBar.progress = this.currentPlayerState.life / this.currentPlayerState.maxlife;
         this.lifeBar.progress = this.curCharacterLife/this.characterLife;
 
         tween(this.damageLabel)
@@ -134,8 +132,7 @@ export class CharacterBase extends Component {
     }
 
     isDead() {
-        return this.characterLife < 0;
-        // return this.currentPlayerState ? this.currentPlayerState.life < 0 : false;
+        return this.curCharacterLife <= 0;
     }
 }
 

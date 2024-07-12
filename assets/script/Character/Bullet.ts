@@ -6,7 +6,7 @@
  * @FilePath: /ocean_roguelike/assets/script/Bullet.ts
  * @Description: 注释信息
  */
-import { _decorator, BoxCollider2D, Collider2D, Component, Contact2DType, IPhysics2DContact, RigidBody2D, v2, Vec2, } from 'cc';
+import { _decorator, BoxCollider2D, Collider2D, Component, Contact2DType, IPhysics2DContact, RigidBody2D, v2, Vec2, log} from 'cc';
 import { Player } from './Player';
 import { Monster } from './Monster';
 import { Global } from '../Global';
@@ -40,6 +40,7 @@ export class Bullet extends Component {
     }
 
     update(deltaTime: number) {
+        log("Bullet Update!");
         if (this.node && this.node.position.length() > 200) {
             this.node.destroy();
         }

@@ -21,6 +21,12 @@ export class Monster extends CharacterBase {
     life: number = 5;
     damage: number = 1;
 
+
+
+    protected onLoad(): void {
+        this.node.on("hurt", ()=>{this.onHurt(5);},this);
+    }
+
     start() {
         super.start();
         
@@ -67,19 +73,17 @@ export class Monster extends CharacterBase {
 
     onHurt(damage: number) {
         super.onHurt(damage);
-        // console.log("收到伤害是：", damage)
-        // this.life -= damage;
-        // console.log("现在的敌人生命值:", this.life);
     }
 
-    onHitPlayer(selfCollider: BoxCollider2D, otherCollider: BoxCollider2D, contact: IPhysics2DContact | null) {
-        // console.log("敌人撞到什么东西了");
-        // console.log(otherCollider.group,otherCollider.tag,otherCollider.name);
-        if (otherCollider.tag == 0.1) {
-            // console.log(otherCollider);
-            otherCollider.node.emit("hurt", this.damage);
-        }
-    }
+    // onHitPlayer(selfCollider: BoxCollider2D, otherCollider: BoxCollider2D, contact: IPhysics2DContact | null) {
+    //     console.log("[CJH]")
+    //     console.log("敌人撞到什么东西了");
+    //     console.log(otherCollider.group,otherCollider.tag,otherCollider.name);
+    //     if (otherCollider.tag == 0.1) {
+    //         console.log(otherCollider);
+    //         otherCollider.node.emit("hurt", this.damage);
+    //     }
+    // }
 
 }
 
