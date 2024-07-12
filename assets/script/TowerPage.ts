@@ -1,4 +1,4 @@
-import { _decorator, Component, instantiate, Node, NodeSpace, Prefab, Vec3 } from 'cc';
+import { _decorator, Component, instantiate, Node, NodeSpace, Prefab, Vec3, log } from 'cc';
 import { TowerBtn } from './TowerBtn';
 const { ccclass, property } = _decorator;
 
@@ -40,7 +40,6 @@ export class TowerPage extends Component {
             tempBtn.getComponent(TowerBtn).SecondPage = this.PageView;
         }
     }
-
 }
 
 

@@ -40,22 +40,17 @@ export class TowerBtn extends Component {
     onClick() {
         if (this.m_towerState == TowerState.EMPTY) {
             this.m_towerState = TowerState.SELECTED;
-            this.showSecondPage();
-            // this.Settle = instantiate(this.TowerPre);
-            // this.Settle.setParent(this.node);
-            // this.Settle.setPosition(Vec3.ZERO);
-            // this.m_towerState = TowerState.Tower_OCCUPIED;
+            this.showTowerPage();
         }
         if (this.m_towerState == TowerState.HERO_OCCUPIED || this.m_towerState == TowerState.TOWER_OCCUPIED) {
+            //todo:
             return;
         }
     }
 
-    showSecondPage() {
-        //todo:
-        this.SecondPage.active = true;
+    showTowerPage() {
         this.SecondPage.getComponent(PageView).callBtn = this.node;
-
+        this.SecondPage.getComponent(PageView).showPage();
     }
 }
 

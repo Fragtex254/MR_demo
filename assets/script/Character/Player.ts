@@ -60,7 +60,7 @@ export class Player extends CharacterBase {
         // var angle = radian / Math.PI * 180;
         // Global.weaponAngle = angle;
         // this.curWeapon.angle = angle;
-        // this.body.linearVelocity = v2(nx, ny);
+        this.body.linearVelocity = v2(nx, ny);
 
     }
 

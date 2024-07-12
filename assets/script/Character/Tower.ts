@@ -15,6 +15,10 @@ const { ccclass, property } = _decorator;
 export class Tower extends CharacterBase {
 
 
+    @property(Prefab) towerBullet:Prefab;
+    @property shootCD:number = 0.5;
+
+
     start() {
         super.start();
     }

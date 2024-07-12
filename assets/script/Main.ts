@@ -7,7 +7,7 @@ import { Global } from './Global';
  * @FilePath: /ocean_roguelike/assets/script/Main.ts
  * @Description: 注释信息
  */
-import { _decorator, AudioSource, Component, director, EPhysics2DDrawFlags, instantiate, Label, Node, NodeSpace, PhysicsSystem2D, Prefab, PrefabLink, ProgressBar, random, randomRangeInt, TiledMap, UITransform,  v2, v3, } from 'cc';
+import { _decorator, AudioSource, Component, log, director, EPhysics2DDrawFlags, instantiate, Label, Node, NodeSpace, PhysicsSystem2D, Prefab, PrefabLink, ProgressBar, random, randomRangeInt, TiledMap, UITransform, v2, v3, } from 'cc';
 import getPlayerLevelState, { LevelId } from './PlayerLevelConfig';
 import { Player } from './Character/Player';
 const { ccclass, property } = _decorator;
@@ -27,11 +27,17 @@ export class Main extends Component {
     @property(Prefab) orBullet: Prefab;
     @property(Prefab) orStaff: Prefab;
     @property(Node) gameOver: Node;
-    @property(Label) labElectricity: Label;
-    @property(Node) towerPage:Node;
+    @property(Node) towerPage: Node;
+    @property(Node) gameStatus: Node;
 
-    score: number = 0;
-    electricity: number = 0;
+    labelElectricity: Label = null;
+    labelTime: Label = null;
+    labelBattleCount: Label = null;
+
+    electricity: number = 0;              //电力
+    time: number = 60;                //剩余时间
+    curBattleCount: number = 1;      //当前波次
+    totalBattleCount: number = 10;   //总波次
 
     bnode: Node = new Node;
     enemyNum: number = 0;
@@ -63,6 +69,7 @@ export class Main extends Component {
         // this.levelNodeBarProgress = this.levelNodeBar.getComponent(ProgressBar);
         this.audioSource = this.getComponent(AudioSource);
 
+
     }
 
 
@@ -75,12 +82,24 @@ export class Main extends Component {
         this.node.on('electricity', this.powerUp, this);
         this.audioSource.play();
 
-        
+        this.initGameStatus();
+
+        // this.towerPage.active = false;
+
     }
 
-    protected onDestroy(): void {
+    initGameStatus() {
+        //get the label
+        this.labelElectricity = this.gameStatus.getChildByName("Electricity").getChildByName("ElectricityIcon").getChildByName("ElectricityLabel").getComponent(Label);
+        this.labelTime = this.gameStatus.getChildByName("Time").getChildByName("TimeIcon").getChildByName("TimeLabel").getComponent(Label);
+        this.labelBattleCount = this.gameStatus.getChildByName("Battle").getChildByName("BattleIcon").getChildByName("BattleLabel").getComponent(Label);
+
+        this.labelElectricity.string = this.electricity.toString();
+        this.labelTime.string = this.time.toString();
+        this.labelBattleCount.string = this.curBattleCount.toString() + "/" + this.totalBattleCount.toString();
 
     }
+
 
     update(deltaTime: number) {
         if (this.elecd > 0) {
@@ -95,7 +114,7 @@ export class Main extends Component {
         }
     }
 
-    
+
     initMap() {
         this.orMap0.getLayer("Door").node.active = false;
 
@@ -125,24 +144,30 @@ export class Main extends Component {
         //     // cc.objPool.put("Bullet2", bullet2Node);//通过put接口放入对象池
         // }
     }
-    
+
     /** 手动发电 游戏未开始时承担开启 */
     private onClickElectricity() {
         if (!this.isGameStart) {
             this.isGameStart = true;
             this.orJoyStick.active = false;
             const pos = this.orPlayer.node.parent.getComponent(UITransform).convertToNodeSpaceAR(this.orMain.worldPosition);
-            this.orPlayer.node.setPosition(pos.x,pos.y);
+            this.orPlayer.node.setPosition(pos.x, pos.y);
             this.orMap0.getLayer("Door").node.active = true;
+
+
+
             this.towerPage.active = true;
-            
-            
+            log(this.towerPage);
+
+            this.gameStatus.active = true;
+
+
         }
         if (this.isGameStart && this.elecd <= 0) {
             this.powerUp();
         }
     }
-    
+
     enemyCreator() {
         if (!this.isGameStart) return;
         if (this.enemyNum > 10) {
@@ -153,24 +178,44 @@ export class Main extends Component {
         tempEnemy.position = v3(randomRangeInt(-300, 300), randomRangeInt(100, 500), 0);
         this.orEnemyBox.addChild(tempEnemy);
         this.enemyNum++;
-        
+
     }
-    
+
     /** 电力提升 */
     powerUp() {
         if (!this.isGameStart || this.elecd > 0) return;
         this.electricity += this.elerate;
         this.elecd = 1;
-        this.labElectricity.string = `电力：${this.electricity}`;
+        this.labelElectricity.string = this.electricity.toString();
     }
+    // 下一波
+    battleCountUp() {
+        if (++this.curBattleCount > this.totalBattleCount)     //当全部波次通关
+        {
+            this.gameOver.active = true;
+            director.pause();
+        }
+        else {
+            this.labelBattleCount.string = this.curBattleCount.toString() + "/" + this.totalBattleCount.toString();
+
+            //todo: refresh next battle time
+            this.timeRefresh();
+
+        }
+    }
+
+    timeRefresh() {
+
+    }
+
     // addScore() {
     //     this.score += 10;
     //     this.exp += 10;
-    
+
     //     let svalue = this.node.getChildByName("Status").getChildByName("Score").getChildByName("Value");
     //     let svalueLabel = svalue.getComponent(Label);
     //     svalueLabel.string = this.score.toString();
-    
+
     //     if (this.exp < 50) {
     //         if (this.curevel != 0) {
     //             this.curevel = 0;
@@ -246,19 +291,19 @@ export class Main extends Component {
     //         this.orPlayer.currentPlayerState = getPlayerLevelState(LevelId.lv9);
     //     }
     //     this.levelNodeLabel.string = this.orPlayer.currentPlayerState.lv == 9 ? "满级" : "等级:" + this.orPlayer.currentPlayerState.lv.toString();
-    
+
     // }
-    
+
     // showSelectSkill() {
     //     console.log("升级啦，可以开始选择技能了");
     //     let lvNode = instantiate(this.orLevelUp);
     //     director.pause();
     //     this.node.addChild(lvNode);
-    
+
     //     let skillBtn01 = lvNode.getChildByName("Layout").getChildByName("Skill01");
     //     let skillBtn02 = lvNode.getChildByName("Layout").getChildByName("Skill02");
     //     let skillBtn03 = lvNode.getChildByName("Layout").getChildByName("Skill03");
-    
+
     //     skillBtn01.on("click", () => {
     //         console.log("技能1被选取");
     //         // 实现给player state的 damge, speed,进行状态加成
@@ -266,16 +311,16 @@ export class Main extends Component {
     //         lvNode.destroy();
     //         director.resume();
     //     }, this);
-    
+
     //     skillBtn02.on("click", () => {
     //         console.log("技能2被选取")
     //         // 实现给player state的 damge, speed,进行状态加成
     //         // todo...
-    
+
     //         lvNode.destroy();
     //         director.resume();
     //     }, this);
-    
+
     //     skillBtn03.on("click", () => {
     //         console.log("技能3被选取", this.node);
     //         // 可自行实现给player state的 damge, speed,进行状态加成

@@ -1,7 +1,7 @@
 import { _decorator, Component, Node } from 'cc';
 import { TowerBtn ,TowerState} from './TowerBtn';
 const { ccclass, property } = _decorator;
-
+    
 @ccclass('PageView')
 export class PageView extends Component {
 
@@ -31,7 +31,7 @@ export class PageView extends Component {
         }
     }
 
-    onClose() {
+    closePage() {
         this.isShowing = false;
         this.callBtn.getComponent(TowerBtn).m_towerState = TowerState.EMPTY;
         this.callBtn = null;
