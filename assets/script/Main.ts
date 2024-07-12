@@ -28,6 +28,7 @@ export class Main extends Component {
     @property(Prefab) orStaff: Prefab;
     @property(Node) gameover: Node;
     @property(Label) labElectricity: Label;
+    @property(Node) towerPage:Node;
 
     score: number = 0;
     electricity: number = 0;
@@ -252,6 +253,9 @@ export class Main extends Component {
             const pos = this.orPlayer.node.parent.getComponent(UITransform).convertToNodeSpaceAR(this.orMain.worldPosition);
             this.orPlayer.node.setPosition(pos.x,pos.y);
             this.orMap0.getLayer("Door").node.active = true;
+            this.towerPage.active = true;
+
+
         }
         if (this.isGameStrat && this.elecd <= 0) {
             this.powerUp();

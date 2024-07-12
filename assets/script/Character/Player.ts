@@ -1,4 +1,4 @@
-import { Button, Vec2 } from 'cc';
+import { Button, log, Vec2 } from 'cc';
 /*
  * @Author: OCEAN.GZY
  * @Date: 2024-02-28 00:02:08
@@ -20,6 +20,7 @@ export class Player extends CharacterBase {
     @property(Prefab) weapon: Prefab;
     weaponPoint: Node;
     curWeapon: Node;
+    tempSpeed:number = 40;
 
     start() {
         super.start();
@@ -40,8 +41,10 @@ export class Player extends CharacterBase {
         // } else {
         //     this.node.setScale(-1, 1, 1);
         // }
-        const nx = direction.x * this.currentPlayerState.moveSpeed * deltaTime;
-        const ny = direction.y * this.currentPlayerState.moveSpeed * deltaTime;
+        // const nx = direction.x * this.currentPlayerState.moveSpeed * deltaTime;
+        // const ny = direction.y * this.currentPlayerState.moveSpeed * deltaTime;
+        const nx = direction.x * this.tempSpeed * deltaTime;
+        const ny = direction.y * this.tempSpeed * deltaTime;
         var radian: number;
         // if (Player.enemiesInArea.length > 0) {
         // var tempEnemy =this.enemiesInArea[Math.floor(Math.random()*this.enemiesInArea.length)];
@@ -64,6 +67,7 @@ export class Player extends CharacterBase {
     override onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
         // 只在两个碰撞体开始接触时被调用一次
         // console.log('palyer onBeginContact');
+        console.log(otherCollider.group.toString());
         if (otherCollider.group === 512) {
             const btn = otherCollider.node.getComponentInChildren(Button);
             if (btn) {
@@ -74,6 +78,7 @@ export class Player extends CharacterBase {
     }
 
     override onEndContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact): void {
+        log("[CJH]: Player End Contact");
         if (otherCollider.group === 512) {
             const btn = otherCollider.node.getComponentInChildren(Button);
             if (btn) {
