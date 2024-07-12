@@ -1,4 +1,4 @@
-import { BoxCollider2D, Color, director, Label, ProgressBar, tween, v3, Vec2 } from 'cc';
+import { BoxCollider2D, Color, director, Label, ProgressBar, tween, v3, Vec2 ,log,error} from 'cc';
 /*
  * @Author: OCEAN.GZY
  * @Date: 2024-02-28 00:02:08
@@ -14,15 +14,19 @@ const { ccclass, property } = _decorator;
 @ccclass('CharacterBase')
 export class CharacterBase extends Component {
 
+
+
+    //Basic state for Hero ,will be implemented in the hero class
     currentPlayerState: PlayerLevelConfig;
-    // moveSpeed: number = 5;
+
+
+    private characterLife: number = 0;
+    private curCharacterLife:number = 0;
+    private forgetInitLife:boolean = true;
+
     body: RigidBody2D;
-    // life: number = 100;
-    // maxLife: number = 100;
     lifeBar: ProgressBar;
-
     damageLabel: Label;
-
     static enemiesInArea: Node[] = [];
     static fireDirection: Vec2 = v2(0, 0);
 
@@ -52,6 +56,29 @@ export class CharacterBase extends Component {
             attackArea.on(Contact2DType.BEGIN_CONTACT, this.onInAttackArea, this);
         }
 
+    }
+
+
+
+    protected update(dt: number): void {
+        if(this.forgetInitLife)
+        {
+            error("You have forgot to initiate character life, please config it in the derived class by using super.setLife()");
+        }
+    }
+
+
+    setLife(life:number)
+    {
+        if(life>0)
+        {    
+            this.characterLife = life;
+            this.curCharacterLife = life;
+            this.forgetInitLife = false;
+        }
+        else{
+            error("You cant set negative number to initiate Life!");
+        }
     }
 
 
@@ -87,9 +114,14 @@ export class CharacterBase extends Component {
     }
 
     onHurt(damage: number) {
-        this.currentPlayerState.life -= damage;
+        // this.currentPlayerState.life -= damage;
+
+
+        this.curCharacterLife -= damage;
         this.damageLabel.string = `-${damage}`;
-        this.lifeBar.progress = this.currentPlayerState.life / this.currentPlayerState.maxlife;
+        // this.lifeBar.progress = this.currentPlayerState.life / this.currentPlayerState.maxlife;
+        this.lifeBar.progress = this.curCharacterLife/this.characterLife;
+
         tween(this.damageLabel)
             .to(0.5, { color: new Color(255, 255, 255, 255), fontSize: 30 })
             .delay(1)
@@ -102,7 +134,8 @@ export class CharacterBase extends Component {
     }
 
     isDead() {
-        return this.currentPlayerState ? this.currentPlayerState.life < 0 : false;
+        return this.characterLife < 0;
+        // return this.currentPlayerState ? this.currentPlayerState.life < 0 : false;
     }
 }
 

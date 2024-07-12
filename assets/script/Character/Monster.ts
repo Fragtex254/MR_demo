@@ -23,9 +23,15 @@ export class Monster extends CharacterBase {
 
     start() {
         super.start();
+        
+        // todo: use configure file to set it
+        super.setLife(20);
     }
 
     update(deltaTime: number) {
+        super.update(deltaTime);
+
+
         if (this.life < 0) {
             var temp = Player.enemiesInArea.indexOf(this.node);
             if (temp != -1) {
