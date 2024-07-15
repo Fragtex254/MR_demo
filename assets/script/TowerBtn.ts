@@ -1,4 +1,4 @@
-import { _decorator, Component, Prefab, Node, instantiate, log, Vec3 } from 'cc';
+import { _decorator, Component, Prefab, Node, instantiate, log, Vec3, Sprite } from 'cc';
 
 import { PageView } from './PageView';
 const { ccclass, property } = _decorator;
@@ -15,11 +15,13 @@ export enum TowerState {
 export class TowerBtn extends Component {
 
     m_towerState: TowerState = null;
+    m_tower: Node = null;
 
-
-
-    @property
     SecondPage: Node = null;
+
+    @property(Node)
+    spriteForShow: Node = null;
+
 
     //----will delete this code piece ----
     @property(Prefab)
@@ -51,6 +53,14 @@ export class TowerBtn extends Component {
     showTowerPage() {
         this.SecondPage.getComponent(PageView).callBtn = this.node;
         this.SecondPage.getComponent(PageView).showPage();
+    }
+
+    buildMachineGun() {
+        this.m_towerState = TowerState.TOWER_OCCUPIED;
+        this.spriteForShow.destroy();                   //暂时用于显示那些地方有按钮
+        this.m_tower = instantiate(this.TowerPre);
+        this.m_tower.setParent(this.node);
+        this.m_tower.setPosition(Vec3.ZERO);
     }
 }
 

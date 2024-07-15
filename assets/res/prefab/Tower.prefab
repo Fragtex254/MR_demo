@@ -919,7 +919,7 @@
       "x": 0,
       "y": 0
     },
-    "_radius": 300,
+    "_radius": 600,
     "_id": ""
   },
   {
@@ -938,7 +938,14 @@
     "__prefab": {
       "__id__": 43
     },
+    "bulletPre": {
+      "__uuid__": "88dc4209-ae45-4bd7-98df-88054f10d2d6",
+      "__expectedType__": "cc.Prefab"
+    },
     "shootCD": 0.5,
+    "firePoint": {
+      "__id__": 2
+    },
     "_id": ""
   },
   {

@@ -10,7 +10,7 @@ import { Vec2, v2, Vec3, RigidBody2D, PlaceMethod, BoxCollider2D, Contact2DType,
 import { _decorator, Component, Node } from 'cc';
 import { Global } from '../Global';
 import { Player } from './Player';
-import { CharacterBase } from './CharacterBase';
+import { AttackTag, CharacterBase } from './CharacterBase';
 const { ccclass, property } = _decorator;
 
 @ccclass('Monster')
@@ -46,13 +46,12 @@ export class Monster extends CharacterBase {
         
         // todo: use configure file to set it
         super.setLife(20);
+        super.setAttackTag(AttackTag.NO_ENEMY,AttackTag.ENEMY);
     }
 
     
 
     update(deltaTime: number) {
-        super.update(deltaTime);
-
         if (this.isDead()) {
             var temp = Player.enemiesInArea.indexOf(this.node);
             if (temp != -1) {
@@ -62,6 +61,9 @@ export class Monster extends CharacterBase {
             this.node.destroy();
             return;
         }
+        super.update(deltaTime);
+
+        
         // console.log("this.node.worldPosition",this.node.worldPosition);
         // console.log("Global.player.worldPosition",Global.player.worldPosition);
         this.aimDirection = v2(Global.player.getWorldPosition().x - this.node.worldPosition.x, Global.player.getWorldPosition().y - this.node.worldPosition.y).normalize();

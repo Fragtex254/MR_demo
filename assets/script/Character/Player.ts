@@ -10,7 +10,7 @@ import { Button, log, Vec2 } from 'cc';
 import { JoyStick } from '../JoyStick';
 import { _decorator, Collider2D, instantiate, IPhysics2DContact, Node, Prefab, v2 } from 'cc';
 import { Global } from '../Global';
-import { CharacterBase } from './CharacterBase';
+import { AttackTag, CharacterBase } from './CharacterBase';
 const { ccclass, property } = _decorator;
 
 @ccclass('Player')
@@ -23,6 +23,7 @@ export class Player extends CharacterBase {
         super.start();
 
         super.setLife(50);
+        super.setAttackTag(AttackTag.ENEMY,AttackTag.PLAYER);
 
         // this.weaponPoint = this.node.getChildByName("WeaponPoint");
         // this.curWeapon = instantiate(this.weapon);
@@ -35,6 +36,8 @@ export class Player extends CharacterBase {
             this.node.destroy();
             return;
         }
+
+        super.update(deltaTime);
         const direction = this.joyStick.getJoyDir();
         // if (direction.x >= 0) {
         //     this.node.setScale(1, 1, 1);

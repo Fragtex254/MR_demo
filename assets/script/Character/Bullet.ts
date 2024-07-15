@@ -6,7 +6,7 @@
  * @FilePath: /ocean_roguelike/assets/script/Bullet.ts
  * @Description: 注释信息
  */
-import { _decorator, BoxCollider2D, Collider2D, Component, Contact2DType, IPhysics2DContact, RigidBody2D, v2, Vec2, log} from 'cc';
+import { _decorator, BoxCollider2D, Collider2D, Component, Contact2DType, IPhysics2DContact, RigidBody2D, v2, Vec2, log, Canvas, View, view} from 'cc';
 import { Player } from './Player';
 import { Monster } from './Monster';
 import { Global } from '../Global';
@@ -20,6 +20,14 @@ export class Bullet extends Component {
 
     bulletCollider: BoxCollider2D;
     damage: number = 5;
+
+
+    //should not be hard code in here Please optimize it!
+    srcWidth:number = 720;
+    srcHeight:number = 1280;
+
+
+
 
 
     start() {
@@ -46,6 +54,11 @@ export class Bullet extends Component {
         }
     }
 
+    setFireDir(dir:Vec2)
+    {
+        this.fireDirection = dir;
+    }
+
     onHitEnemy(selfCollider: Collider2D, otherCollider: Collider2D, concat: IPhysics2DContact | null) {
         // console.log("子弹碰到的东group是",otherCollider.group);
         if (otherCollider.group == 4) {
@@ -57,6 +70,16 @@ export class Bullet extends Component {
                 this.node.destroy();
             },0.1)
         }
+    }
+
+    isOverScreen()
+    {
+        let result =
+            this.node.worldPosition.x < this.srcWidth - this.node.width ||
+            this.node.worldPosition.x > this.srcWidth + this.node.width ||
+            this.node.worldPosition.y < this.srcHeight - this.node.height ||
+            this.node.worldPosition.y > this.srcHeight + this.node.height;
+        return result;
     }
 }
 
