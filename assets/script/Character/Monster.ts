@@ -23,8 +23,22 @@ export class Monster extends CharacterBase {
 
 
 
+
+
     protected onLoad(): void {
         this.node.on("hurt", ()=>{this.onHurt(5);},this);
+
+        // 以秒为单位的时间间隔
+        let interval = 1;
+        this.schedule(function() {
+            // 这里的 this 指向 component
+            this.testHurt();
+        }, interval);
+        }
+
+
+    testHurt(){
+        this.onHurt(2);
     }
 
     start() {
@@ -33,6 +47,8 @@ export class Monster extends CharacterBase {
         // todo: use configure file to set it
         super.setLife(20);
     }
+
+    
 
     update(deltaTime: number) {
         super.update(deltaTime);
@@ -60,6 +76,7 @@ export class Monster extends CharacterBase {
             this.node.setScale(1, 1, 1);
         } else {
             this.node.setScale(-1, 1, 1);
+            this.fixLabelScale();
         }
 
         const nx = this.aimDirection.x * this.moveSpeed * deltaTime;

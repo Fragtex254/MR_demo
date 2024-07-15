@@ -1,4 +1,4 @@
-import { BoxCollider2D, Color, director, Label, ProgressBar, tween, v3, Vec2 ,log,error} from 'cc';
+import { BoxCollider2D, Color, director, Label, ProgressBar, tween, v3, Vec2 ,log,error, Vec3} from 'cc';
 /*
  * @Author: OCEAN.GZY
  * @Date: 2024-02-28 00:02:08
@@ -80,6 +80,19 @@ export class CharacterBase extends Component {
             error("You cant set negative number to initiate Life!");
         }
     }
+
+    fixLabelScale()
+    {
+        //in order to fix left-right reversed of label cause by Main.ts enemy creator
+        var damagelabelnode = this.node.getChildByName("DamageLabel");
+
+        if(this.node.scale.x<0)
+        {
+            damagelabelnode.setScale(-1,1,1);
+        }
+    }
+
+    
 
 
     onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
