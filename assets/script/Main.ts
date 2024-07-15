@@ -10,6 +10,7 @@ import { Global } from './Global';
 import { _decorator, AudioSource, Component, log, director, EPhysics2DDrawFlags, instantiate, Label, Node, NodeSpace, PhysicsSystem2D, Prefab, PrefabLink, ProgressBar, random, randomRangeInt, TiledMap, UITransform, v2, v3, } from 'cc';
 import getPlayerLevelState, { LevelId } from './PlayerLevelConfig';
 import { Player } from './Character/Player';
+import { GameStatus } from './GameStatus';
 const { ccclass, property } = _decorator;
 
 @ccclass('Main')
@@ -90,9 +91,9 @@ export class Main extends Component {
 
     initGameStatus() {
         //get the label
-        this.labelElectricity = this.gameStatus.getChildByName("Electricity").getChildByName("ElectricityIcon").getChildByName("ElectricityLabel").getComponent(Label);
-        this.labelTime = this.gameStatus.getChildByName("Time").getChildByName("TimeIcon").getChildByName("TimeLabel").getComponent(Label);
-        this.labelBattleCount = this.gameStatus.getChildByName("Battle").getChildByName("BattleIcon").getChildByName("BattleLabel").getComponent(Label);
+        this.labelElectricity = this.gameStatus.getComponent(GameStatus).labelElectricity;
+        this.labelTime = this.gameStatus.getComponent(GameStatus).labelTime;
+        this.labelBattleCount = this.gameStatus.getComponent(GameStatus).labelBattleCount;
 
         this.labelElectricity.string = this.electricity.toString();
         this.labelTime.string = this.time.toString();
@@ -196,7 +197,7 @@ export class Main extends Component {
             director.pause();
         }
         else {
-            this.labelBattleCount.string = this.curBattleCount.toString() + "/" + this.totalBattleCount.toString();
+            this.labelBattleCount.string = `${this.curBattleCount} / ${this.totalBattleCount}`;
 
             //todo: refresh next battle time
             this.timeRefresh();

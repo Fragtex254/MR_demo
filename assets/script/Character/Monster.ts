@@ -53,8 +53,7 @@ export class Monster extends CharacterBase {
     update(deltaTime: number) {
         super.update(deltaTime);
 
-
-        if (this.life < 0) {
+        if (this.isDead()) {
             var temp = Player.enemiesInArea.indexOf(this.node);
             if (temp != -1) {
                 Player.enemiesInArea.splice(temp, 1);
