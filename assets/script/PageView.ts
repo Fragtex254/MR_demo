@@ -41,7 +41,10 @@ export class PageView extends Component {
 
     closePage() {
         this.isShowing = false;
-        this.callBtn.getComponent(TowerBtn).m_towerState = TowerState.EMPTY;
+        var tempBtnState = this.callBtn.getComponent(TowerBtn).m_towerState;
+        if (tempBtnState == TowerState.SELECTED) {
+            this.callBtn.getComponent(TowerBtn).m_towerState = TowerState.EMPTY;
+        }
         this.callBtn = null;
         this.node.active = false;
     }
@@ -72,7 +75,6 @@ export class PageView extends Component {
 
         this.callBtn.getComponent(TowerBtn).buildMachineGun();
         console.log("BUild Machine Gun tower success!");
-        this.closePage();
     }
 }
 

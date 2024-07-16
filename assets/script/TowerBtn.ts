@@ -34,9 +34,6 @@ export class TowerBtn extends Component {
         this.m_towerState = TowerState.EMPTY;
     }
 
-    update(deltaTime: number) {
-
-    }
 
 
     onClick() {
@@ -61,6 +58,8 @@ export class TowerBtn extends Component {
         this.m_tower = instantiate(this.TowerPre);
         this.m_tower.setParent(this.node);
         this.m_tower.setPosition(Vec3.ZERO);
+        this.SecondPage.getComponent(PageView).closePage();     //建造完毕后会关闭
+        this.SecondPage = null;
     }
 }
 

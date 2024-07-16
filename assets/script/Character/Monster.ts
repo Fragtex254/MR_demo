@@ -26,30 +26,30 @@ export class Monster extends CharacterBase {
 
 
     protected onLoad(): void {
-        this.node.on("hurt", ()=>{this.onHurt(5);},this);
+        this.node.on("hurt", () => { this.onHurt(5); }, this);
 
         // 以秒为单位的时间间隔
         let interval = 1;
-        this.schedule(function() {
-            // 这里的 this 指向 component
-            this.testHurt();
-        }, interval);
-        }
+        // this.schedule(function() {
+        //     // 这里的 this 指向 component
+        //     this.testHurt();
+        // }, interval);
+    }
 
 
-    testHurt(){
+    testHurt() {
         this.onHurt(2);
     }
 
     start() {
         super.start();
-        
+
         // todo: use configure file to set it
         super.setLife(20);
-        super.setAttackTag(AttackTag.NO_ENEMY,AttackTag.ENEMY);
+        super.setAttackTag(AttackTag.NO_ENEMY, AttackTag.ENEMY);
     }
 
-    
+
 
     update(deltaTime: number) {
         if (this.isDead()) {
@@ -63,7 +63,7 @@ export class Monster extends CharacterBase {
         }
         super.update(deltaTime);
 
-        
+
         // console.log("this.node.worldPosition",this.node.worldPosition);
         // console.log("Global.player.worldPosition",Global.player.worldPosition);
         this.aimDirection = v2(Global.player.getWorldPosition().x - this.node.worldPosition.x, Global.player.getWorldPosition().y - this.node.worldPosition.y).normalize();

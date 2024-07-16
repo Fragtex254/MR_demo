@@ -1,4 +1,4 @@
-import { Vec2 } from 'cc';
+import { log, Vec2 } from 'cc';
 /*
  * @Author: OCEAN.GZY
  * @Date: 2024-02-28 00:02:08
@@ -17,34 +17,45 @@ const { ccclass, property } = _decorator;
 export class Tower extends CharacterBase {
 
 
-    @property(Prefab) bulletPre:Prefab;
-    @property shootCD:number = 0.5;
-    @property(Node) firePoint=null;
+    @property(Prefab) bulletPre: Prefab;
+    @property shootCD: number = 0.5;
+    @property(Node) firePoint = null;
+    @property(Node) towerSprite;
 
-    curTarget:Node = null;
-    m_fireDirction:Vec2 = null;
+    curTarget: Node = null;
+    m_fireDirction: Vec2 = null;
 
 
     start() {
         super.start();
         super.setLife(30);
-        super.setAttackTag(AttackTag.ENEMY,AttackTag.TOWER);
+        super.setAttackTag(AttackTag.ENEMY, AttackTag.TOWER);
 
-        this.schedule(() => {this.shoot},this.shootCD);     //会存在每次计时器回调执行时碰巧没有curTarget的bad case
+        this.schedule(() => { this.shoot(); }, this.shootCD);     //会存在每次计时器回调执行时碰巧没有curTarget的bad case
     }
 
 
     update(deltaTime: number) {
+
+        log(Tower.enemiesInArea);
+
         if (this.isDead()) {
             this.node.destroy();
             return;
         }
         super.update(deltaTime);
 
-        if(!this.curTarget && Tower.enemiesInArea.length > 0 )  //丢失了当前目标，需要重新选取目标
+        if (!this.curTarget != null && Tower.enemiesInArea.length > 0)  //丢失了当前目标，需要重新选取目标
         {
-            this.curTarget = Tower.enemiesInArea[Math.floor(Math.random()*Tower.enemiesInArea.length)];
-            this.m_fireDirction = v2(this.curTarget.worldPosition.x - this.firePoint.worldPosition.x, this.curTarget.worldPosition.y - this.firePoint.worldPosition.y);
+            this.curTarget = Tower.enemiesInArea[Math.floor(Math.random() * Tower.enemiesInArea.length)];//随机获取一个敌人
+            log("[CJH]:log tower cur target");
+            log(this.curTarget);
+            this.m_fireDirction = v2(this.curTarget.worldPosition.x - this.firePoint.worldPosition.x, this.curTarget.worldPosition.y - this.firePoint.worldPosition.y).normalize();
+            //set node aim dir
+            var radian: number;
+            radian = Math.atan2(this.m_fireDirction.x, this.m_fireDirction.y);
+            this.node.setRotationFromEuler(0, 0, radian - 90);
+            this.shoot();
         }
 
 
@@ -84,10 +95,8 @@ export class Tower extends CharacterBase {
         // console.log('palyer onPostSolve');
     }
 
-    shoot()
-    {
-        if(this.curTarget)
-        {
+    shoot() {
+        if (this.curTarget) {
             var bullet = instantiate(this.bulletPre);
             this.node.addChild(bullet);
             bullet.worldPosition = this.firePoint.getWorldPosition();
@@ -95,7 +104,7 @@ export class Tower extends CharacterBase {
         }
     }
 
-    
+
 
 }
 
