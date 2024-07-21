@@ -6,43 +6,23 @@
  * @FilePath: /ocean_roguelike/assets/script/Bullet.ts
  * @Description: 注释信息
  */
-import { _decorator, BoxCollider2D, Collider2D, Component, Contact2DType, IPhysics2DContact, RigidBody2D, v2, Vec2, log, Canvas, View, view } from 'cc';
+import { _decorator, BoxCollider2D, Collider2D, Component, Contact2DType, IPhysics2DContact, RigidBody2D, v2, Vec2, log, Canvas, View, view, director } from 'cc';
 import { Player } from './Player';
 import { Monster } from './Monster';
-import { Global } from '../Global';
+import { PHY_GROUP } from '../Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('Bullet')
 export class Bullet extends Component {
 
-    speed: number = 20;
-    fireDirection: Vec2 = v2(20, 0);
+    speed: number = 800;
+    fireDirection: Vec2 = v2(1, 1);
 
     bulletCollider: BoxCollider2D;
     damage: number = 5;
 
-
-    //should not be hard code in here Please optimize it!
-    srcWidth: number = 720;
-    srcHeight: number = 1280;
-
-
-
-
-
     start() {
-        // console.log(Player.fireDirection);
-
-        log("[CJH]:Create a bullet and his parent is " + this.node.parent.name);
-        if (Player.fireDirection.length() > 0) {
-            this.fireDirection = Player.fireDirection.normalize();
-        }
-
-        if (this.node && this.getComponent(RigidBody2D)) {
-            this.getComponent(RigidBody2D).linearVelocity = this.fireDirection.multiplyScalar(this.speed);
-            this.node.angle = Global.weaponAngle;
-        }
-
+        // log("[Bullet]:Create a bullet and his parent is " + this.node.parent.name);
         if (this.node && this.getComponent(BoxCollider2D)) {
             this.bulletCollider = this.getComponent(BoxCollider2D);
             this.bulletCollider.on(Contact2DType.BEGIN_CONTACT, this.onHitEnemy, this);
@@ -51,36 +31,60 @@ export class Bullet extends Component {
 
     update(deltaTime: number) {
         // log("Bullet Update!");
-        if (this.node && this.node.position.length() > 200) {
-            log(this.node);
+        // if (this.node && this.node.position.length() > 200) {
+        //     log(this.node);
+        //     this.node.destroy();
+        // }
+
+        const nx = this.fireDirection.x * this.speed * deltaTime;
+        const ny = this.fireDirection.y * this.speed * deltaTime;
+
+        this.getComponent(RigidBody2D).linearVelocity = v2(nx, ny);
+        if (this.isOverScreen()) {
             this.node.destroy();
         }
     }
 
     setFireDir(dir: Vec2) {
         this.fireDirection = dir;
+        let radian: number = Math.atan2(dir.y, dir.x);
+        this.node.angle = - (90 - radian * 360 / 2 / Math.PI);
     }
 
     onHitEnemy(selfCollider: Collider2D, otherCollider: Collider2D, concat: IPhysics2DContact | null) {
-        // console.log("子弹碰到的东group是",otherCollider.group);
-        if (otherCollider.group == 4) {
+        console.log("子弹碰到的group是", otherCollider.group);
+        if (otherCollider.group == PHY_GROUP.MONSTER) {
 
             var hitenemy = otherCollider.node;
-            // console.log(hitenemy);
-            hitenemy.emit("hurt", this.damage);
+            hitenemy.getComponent(Monster).onHurt(5);
+            // hitenemy.emit(hitenemy.uuid + "is hurted", this.damage);
             this.scheduleOnce(function () {
                 this.node.destroy();
-            }, 0.1)
+            })
         }
     }
 
-    // isOverScreen() {
-    //     let result =
-    //         this.node.worldPosition.x < this.srcWidth - this.node.width ||
-    //         this.node.worldPosition.x > this.srcWidth + this.node.width ||
-    //         this.node.worldPosition.y < this.srcHeight - this.node.height ||
-    //         this.node.worldPosition.y > this.srcHeight + this.node.height;
-    //     return result;
-    // }
+    isOverScreen() {
+
+        let worldBounds = this.node.getComponent(Collider2D).worldAABB;
+        let visibleSize = view.getVisibleSize();
+        if (worldBounds.xMax < 0 //出来屏幕最左边
+
+            || worldBounds.xMin > visibleSize.width //超出屏幕最右边
+
+            || worldBounds.yMin < 0  //超出屏幕底部
+
+            || worldBounds.yMax > visibleSize.height //超出屏幕顶部
+
+        ) {
+            // 节点超出屏幕
+            console.log("[Bullet] over screen!");
+            return true;
+
+        }
+        else {
+            return false;
+        }
+    }
 }
 

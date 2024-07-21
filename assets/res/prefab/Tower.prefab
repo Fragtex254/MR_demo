@@ -844,7 +844,7 @@
     "enabledContactListener": true,
     "bullet": false,
     "awakeOnLoad": true,
-    "_group": 2,
+    "_group": 256,
     "_type": 2,
     "_allowSleep": true,
     "_gravityScale": 0,
@@ -876,7 +876,7 @@
       "__id__": 39
     },
     "tag": 0.1,
-    "_group": 2,
+    "_group": 256,
     "_density": 1,
     "_sensor": false,
     "_friction": 0.2,

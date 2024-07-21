@@ -26,7 +26,6 @@ export class Monster extends CharacterBase {
 
 
     protected onLoad(): void {
-        this.node.on("hurt", () => { this.onHurt(5); }, this);
 
         // 以秒为单位的时间间隔
         let interval = 1;
@@ -43,12 +42,17 @@ export class Monster extends CharacterBase {
 
     start() {
         super.start();
+        this.node.on(this.node.uuid + "is hurted", () => { this.onHurt(5); }, this);
 
         // todo: use configure file to set it
         super.setLife(20);
         super.setAttackTag(AttackTag.NO_ENEMY, AttackTag.ENEMY);
     }
 
+
+    protected onDestroy(): void {
+        this.node.off(this.node.uuid + "is hurted");
+    }
 
 
     update(deltaTime: number) {

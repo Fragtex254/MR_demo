@@ -12,10 +12,18 @@ import { Player } from "./Character/Player";
 export class Global {
     static player: Player;
     static weaponBullets: Node;
-    static weaponAngle: number;
-
-
 };
 
-
+export enum PHY_GROUP {
+    DEFAULT = 1 << 0,
+    PLAYER = 1 << 1,
+    MONSTER = 1 << 2,
+    PLAYER_WEAPON = 1 << 3,
+    MONSTER_WEAPON = 1 << 4,
+    PLAER_ATTACK_AREA = 1 << 5,
+    TOOL = 1 << 6,
+    HERO = 1 << 7,
+    TOWER = 1 << 8,
+    MAIN = 1 << 9
+};
 

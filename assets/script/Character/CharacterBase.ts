@@ -83,10 +83,7 @@ export class CharacterBase extends Component {
         this.damageLabel.color = new Color(255, 255, 255, 0);
 
 
-        let attackArea = this.getComponent(CircleCollider2D);
-        if (attackArea) {
-            attackArea.on(Contact2DType.BEGIN_CONTACT, this.onInAttackArea, this);
-        }
+
 
     }
 
@@ -99,6 +96,9 @@ export class CharacterBase extends Component {
 
         if (this.forgetSetTag) {
             error("You have forgot to initiate attack tag, please config it in the derived class by using super.setAttackTag()");
+        }
+        if (this.curCharacterLife < 0) {
+            this.node.destroy();
         }
     }
 
@@ -155,14 +155,7 @@ export class CharacterBase extends Component {
         // console.log('palyer onPostSolve');
     }
 
-    onInAttackArea(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
-        // 每次处理完碰撞体接触逻辑时被调用
-        // console.log('敌人在攻击范围内');
-        // 当碰到的物体是要攻击的物体就加入攻击范围
-        if (this.isTargetTag(otherCollider) && CharacterBase.enemiesInArea.indexOf(otherCollider.node) === -1) {
-            CharacterBase.enemiesInArea.push(otherCollider.node);
-        }
-    }
+
 
 
     getWorldPosition() {
@@ -171,7 +164,7 @@ export class CharacterBase extends Component {
 
     onHurt(damage: number) {
 
-        log("[CJH]:hurt");
+        log("[CJH]:hurt" + damage.toString());
         this.curCharacterLife -= damage;
         this.damageLabel.string = `-${damage}`;
         this.lifeBar.progress = this.curCharacterLife / this.characterLife;
