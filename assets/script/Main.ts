@@ -1,4 +1,4 @@
-import { Global } from './Global';
+import { GameStatusType, Global } from './Global';
 /*
  * @Author: OCEAN.GZY
  * @Date: 2024-02-28 22:05:38
@@ -7,11 +7,12 @@ import { Global } from './Global';
  * @FilePath: /ocean_roguelike/assets/script/Main.ts
  * @Description: 注释信息
  */
-import { _decorator, AudioSource, Component, log, director, EPhysics2DDrawFlags, instantiate, Label, Node, NodeSpace, PhysicsSystem2D, Prefab, PrefabLink, ProgressBar, random, randomRangeInt, TiledMap, UITransform, v2, v3, } from 'cc';
+import { _decorator, AudioSource, Component, log, director, instantiate, Label, Node, NodeSpace, PhysicsSystem2D, Prefab, ProgressBar, random, randomRangeInt, TiledMap, UITransform, v2, v3, } from 'cc';
 import getPlayerLevelState, { LevelId } from './PlayerLevelConfig';
 import { Player } from './Character/Player';
 import { GameStatus } from './GameStatus';
 const { ccclass, property } = _decorator;
+
 
 @ccclass('Main')
 export class Main extends Component {
@@ -42,12 +43,7 @@ export class Main extends Component {
 
     bnode: Node = new Node;
     enemyNum: number = 0;
-    isGameStart: boolean = false;
-
-    // levelNode: Node;
-    // levelNodeLabel: Label;
-    // levelNodeBar: Node;
-    // levelNodeBarProgress: ProgressBar;
+    gameState: GameStatusType = GameStatusType.Wait;
 
     audioSource: AudioSource;
 
@@ -64,12 +60,7 @@ export class Main extends Component {
         this.initMap();
         this.initPool();
 
-        // this.levelNode = this.node.getChildByName("Status").getChildByName("Level")
-        // this.levelNodeLabel = this.levelNode.getComponent(Label);
-        // this.levelNodeBar = this.levelNode.getChildByName("LevelBar");
-        // this.levelNodeBarProgress = this.levelNodeBar.getComponent(ProgressBar);
         this.audioSource = this.getComponent(AudioSource);
-
 
     }
 
@@ -114,6 +105,11 @@ export class Main extends Component {
             this.elecd -= deltaTime;
         }
         // this.orCamera.worldPosition = this.orPlayer.getWorldPosition();
+        /**
+         * 流程的管理上尽可能以事件（GameStart、GameEnd）的收发为准，而不是以某个节点的状态，这样前后有序也方便控制游戏整体流程状态
+         * update一直刷新 如果期间主角那边有什么死亡动画或者结算画面 还没执行完就会在并行这里直接被暂停卡住
+         * 或者状态没变但途中节点销毁也会导致这边的对象为空报错
+         *  */
         if (this.orPlayer.isDead()) {
             this.audioSource.stop();
             Player.enemiesInArea = [];
@@ -155,29 +151,23 @@ export class Main extends Component {
 
     /** 手动发电 游戏未开始时承担开启 */
     private onClickElectricity() {
-        if (!this.isGameStart) {
-            this.isGameStart = true;
+        if (this.gameState !== GameStatusType.Start) {
+            this.gameState = GameStatusType.Start;
             this.orJoyStick.active = false;
             const pos = this.orPlayer.node.parent.getComponent(UITransform).convertToNodeSpaceAR(this.orMain.worldPosition);
             this.orPlayer.node.setPosition(pos.x, pos.y);
             this.orMap0.getLayer("Door").node.active = true;
-
-
-
             this.towerPage.active = true;
             log(this.towerPage);
-
             this.gameStatus.active = true;
-
-
         }
-        if (this.isGameStart && this.elecd <= 0) {
+        if (this.gameState === GameStatusType.Start && this.elecd <= 0) {
             this.powerUp();
         }
     }
 
     enemyCreator() {
-        if (!this.isGameStart) return;
+        if (!this.gameState) return;
         if (this.enemyNum > 10) {
             this.unschedule(this.enemyCreator);
         }
@@ -191,11 +181,22 @@ export class Main extends Component {
 
     /** 电力提升 */
     powerUp() {
-        if (!this.isGameStart || this.elecd > 0) return;
+        if (this.gameState !== GameStatusType.Start || this.elecd > 0) return;
         this.electricity += this.elerate;
         this.elecd = 1;
         this.labelElectricity.string = this.electricity.toString();
+        this.orPlayer.node.emit('change', 'xiuli');
     }
+
+    /** 基地提升（用playlevelconfig改改参数） */
+    levelUp() {
+        // if (this.gameState !== GameStatusType.Start || this.elecd > 0) return;
+        // this.electricity += this.elerate;
+        // this.elecd = 1;
+        // this.labelElectricity.string = this.electricity.toString();
+    }
+
+
     // 下一波
     battleCountUp() {
         if (++this.curBattleCount > this.totalBattleCount)     //当全部波次通关
@@ -205,7 +206,6 @@ export class Main extends Component {
         }
         else {
             this.labelBattleCount.string = `${this.curBattleCount} / ${this.totalBattleCount}`;
-
             //todo: refresh next battle time
             this.timeRefresh();
 

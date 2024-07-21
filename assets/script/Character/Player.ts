@@ -8,29 +8,35 @@ import { Button, log, Vec2 } from 'cc';
  * @Description: 注释信息
  */
 import { JoyStick } from '../JoyStick';
-import { _decorator, Collider2D, instantiate, IPhysics2DContact, Node, Prefab, v2 } from 'cc';
-import { Global } from '../Global';
+import { _decorator, Collider2D, Animation, IPhysics2DContact, Node, Prefab, v2 } from 'cc';
 import { AttackTag, CharacterBase } from './CharacterBase';
 const { ccclass, property } = _decorator;
+
+
 
 @ccclass('Player')
 export class Player extends CharacterBase {
 
     @property(JoyStick) joyStick: JoyStick;
-    tempSpeed:number = 40;
+    tempSpeed: number = 40;
 
     start() {
         super.start();
 
         super.setLife(50);
-        super.setAttackTag(AttackTag.ENEMY,AttackTag.PLAYER);
-
+        super.setAttackTag(AttackTag.ENEMY, AttackTag.PLAYER);
         // this.weaponPoint = this.node.getChildByName("WeaponPoint");
         // this.curWeapon = instantiate(this.weapon);
         // this.curWeapon.setPosition(this.weaponPoint.position);
         // this.node.addChild(this.curWeapon);
     }
 
+    // protected onDestroy(): void {
+    //     super.onDestroy();
+    //     this.node.off('change', this.changeState, this);
+    // }
+
+    private _state: string;// 记录上一次的状态 避免频发调用
     update(deltaTime: number) {
         if (this.isDead()) {
             this.node.destroy();
@@ -64,7 +70,7 @@ export class Player extends CharacterBase {
         // Global.weaponAngle = angle;
         // this.curWeapon.angle = angle;
         this.body.linearVelocity = v2(nx, ny);
-
+        if (this._state !== this.joyStick.state && this.joyStick.node.active) this.changeState(this.joyStick.state);
     }
 
     override onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {

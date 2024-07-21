@@ -25,15 +25,13 @@ export class JoyStick extends Component {
     private _out_dir: Vec2 = v2(0, 0);
     private _ui_trans: UITransform;
     private _max_radius: number = 45;
+    public state: string;
 
     start() {
         this._ui_trans = this.node.getComponent(UITransform);
         this.handleTouchEvent();
     }
 
-    update(deltaTime: number) {
-
-    }
 
     handleTouchEvent() {
         this.node.on(Node.EventType.TOUCH_START, this.onTouchStart, this);
@@ -58,19 +56,22 @@ export class JoyStick extends Component {
         const outvec2 = tempvec2.normalize().multiplyScalar(scale);
         this._out_dir = outvec2;
         this.innerJoy.setPosition(outvec2.x, outvec2.y);
+        this.state = "pao";
     }
 
     onTouchEnd(event: EventTouch) {
         this.innerJoy.setPosition(0, 0);
         this._out_dir = v2(0, 0);
+        this.state = "daji";
     }
 
     onTouchCancel(event: EventTouch) {
         this.innerJoy.setPosition(0, 0);
         this._out_dir = v2(0, 0);
+        this.state = "daji";
     }
 
-    getJoyDir(){
+    getJoyDir() {
         return this._out_dir;
     }
 }

@@ -1,4 +1,4 @@
-import { BoxCollider2D, Color, director, Label, ProgressBar, tween, v3, Vec2, log, error, Vec3 } from 'cc';
+import { BoxCollider2D, Color, director, Label, ProgressBar, tween, v3, Vec2, log, error, Animation } from 'cc';
 /*
  * @Author: OCEAN.GZY
  * @Date: 2024-02-28 00:02:08
@@ -37,7 +37,6 @@ export enum AttackTag {
 
 @ccclass('CharacterBase')
 export class CharacterBase extends Component {
-
 
 
     //Basic state for Hero ,will be implemented in the hero class
@@ -82,8 +81,7 @@ export class CharacterBase extends Component {
         this.damageLabel = this.node.getComponentInChildren(Label);
         this.damageLabel.color = new Color(255, 255, 255, 0);
 
-
-
+        this.node.on('change', this.changeState, this);
 
     }
 
@@ -134,8 +132,11 @@ export class CharacterBase extends Component {
         }
     }
 
-
-
+    changeState(state: string) {
+        const anim = this.node?.getComponent(Animation);
+        if (!anim || anim?.getState(state)?.isPlaying) return;
+        anim.play(state);
+    }
 
     onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
         // 只在两个碰撞体开始接触时被调用一次

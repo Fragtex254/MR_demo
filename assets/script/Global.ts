@@ -27,3 +27,19 @@ export enum PHY_GROUP {
     MAIN = 1 << 9
 };
 
+export enum GameStatusType {
+    /** 等待 */
+    Wait,
+    /** 开始 */
+    Start,
+    /** 暂停 */
+    Pasue,
+    /** 结束 */
+    End,
+}
+
+export const enum PlayerState {
+    IDLE,
+    RUN,
+    FIX,
+}
