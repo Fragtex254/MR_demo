@@ -683,7 +683,7 @@
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "2f7cf870-7c5c-4c08-ba1e-74015493c0ca@f9941",
+      "__uuid__": "57e1b3b9-20a2-49b4-8c7a-55bd6a15d56f@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 0,
@@ -815,7 +815,6 @@
       "__id__": 37
     },
     "joyStick": null,
-    "weapon": null,
     "_id": ""
   },
   {

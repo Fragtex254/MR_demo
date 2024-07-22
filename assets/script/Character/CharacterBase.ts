@@ -60,9 +60,6 @@ export class CharacterBase extends Component {
     static enemiesInArea: Node[] = [];          //全局变量用于记录所有在攻击范围内的怪物
     static fireDirection: Vec2 = v2(0, 0);
 
-
-    fireCoverEnemies: Set<Node>;
-
     start() {
         this.currentPlayerState = getPlayerLevelState(LevelId.lv0);
         console.log("初始化", this.currentPlayerState);

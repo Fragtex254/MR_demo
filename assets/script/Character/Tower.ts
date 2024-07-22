@@ -25,6 +25,7 @@ export class Tower extends CharacterBase {
     curTarget: Node = null;
     m_fireDirction: Vec2 = null;
     m_radian: number = 0;
+    m_angle: number = 0;
 
 
     start() {
@@ -90,7 +91,12 @@ export class Tower extends CharacterBase {
 
     shoot() {
         if (this.curTarget != null) {
-            this.node.angle = - (90 - this.m_radian * 360 / 2 / Math.PI);
+            this.m_angle = - (90 - this.m_radian * 360 / 2 / Math.PI);
+            this.node.angle = this.m_angle;
+
+            this.node.getChildByName("LifeBar").angle = -this.m_angle;
+            this.node.getChildByName("DamageLabel").angle = -this.m_angle;
+
             var bullet = instantiate(this.bulletPre);
             director.getScene().getChildByName("Canvas").addChild(bullet);
             bullet.worldPosition = this.firePoint.getWorldPosition();
