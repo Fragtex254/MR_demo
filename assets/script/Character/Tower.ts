@@ -26,6 +26,7 @@ export class Tower extends CharacterBase {
     m_fireDirction: Vec2 = null;
     m_radian: number = 0;
     m_angle: number = 0;
+    m_shoot:boolean = false;
 
 
     start() {
@@ -54,9 +55,13 @@ export class Tower extends CharacterBase {
 
         if (Tower.enemiesInArea.length > 0)  //丢失了当前目标，需要重新选取目标
         {
+            this.m_shoot = true;
             this.curTarget = Tower.enemiesInArea[Math.floor(Math.random() * Tower.enemiesInArea.length)];//随机获取一个敌人
             this.m_fireDirction = v2(this.curTarget.worldPosition.x - this.node.worldPosition.x, this.curTarget.worldPosition.y - this.node.worldPosition.y).normalize();
             this.m_radian = Math.atan2(this.m_fireDirction.y, this.m_fireDirction.x);
+        }
+        else{
+            this.m_shoot = false;
         }
 
     }
@@ -90,7 +95,7 @@ export class Tower extends CharacterBase {
     }
 
     shoot() {
-        if (this.curTarget != null) {
+        if (this.m_shoot) {
             this.m_angle = - (90 - this.m_radian * 360 / 2 / Math.PI);
             this.node.angle = this.m_angle;
 
@@ -103,7 +108,7 @@ export class Tower extends CharacterBase {
             bullet.getComponent(Bullet).setFireDir(this.m_fireDirction);
         }
         else {
-            console.error("No curTarget");
+            console.log("No curTarget");
         }
     }
 
