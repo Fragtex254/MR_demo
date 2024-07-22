@@ -7,7 +7,7 @@ import { GameStatusType, Global } from './Global';
  * @FilePath: /ocean_roguelike/assets/script/Main.ts
  * @Description: 注释信息
  */
-import { _decorator, AudioSource, Component, log, director, instantiate, Label, Node, NodeSpace, PhysicsSystem2D, Prefab, ProgressBar, random, randomRangeInt, TiledMap, UITransform, v2, v3, } from 'cc';
+import { _decorator, AudioSource, Component, log, director, instantiate, Label, Node, NodeSpace, PhysicsSystem2D, Prefab, ProgressBar, random,EPhysics2DDrawFlags, randomRangeInt, TiledMap, UITransform, v2, v3, } from 'cc';
 import getPlayerLevelState, { LevelId } from './PlayerLevelConfig';
 import { Player } from './Character/Player';
 import { GameStatus } from './GameStatus';
@@ -21,9 +21,9 @@ export class Main extends Component {
     @property(Player) orPlayer: Player;
     @property(Node) orJoyStick: Node;
     @property(Node) orMain: Node;
-    @property(Node) orStaffBox: Node;
+    @property(Node) orStaffBox: Node = null;
     @property(Node) orEnemyBox: Node;
-    @property(TiledMap) orMap0: TiledMap;
+    @property(Node) orMap1: Node;
     @property(Prefab) orMonster: Prefab;
     @property(Prefab) orLevelUp: Prefab;
     @property(Prefab) orBullet: Prefab;
@@ -55,7 +55,6 @@ export class Main extends Component {
         Global.player = this.orPlayer;
         this.node.addChild(this.bnode);
         Global.weaponBullets = this.bnode;
-        console.log(this.orMap0.getMapSize());
         this.gameOver.active = false;
         this.initMap();
         this.initPool();
@@ -67,12 +66,12 @@ export class Main extends Component {
 
     start() {
 
-        // PhysicsSystem2D.instance.enable = true;
-        // PhysicsSystem2D.instance.debugDrawFlags = EPhysics2DDrawFlags.Aabb |
-        //     EPhysics2DDrawFlags.Pair |
-        //     EPhysics2DDrawFlags.CenterOfMass |
-        //     EPhysics2DDrawFlags.Joint |
-        //     EPhysics2DDrawFlags.Shape;
+        PhysicsSystem2D.instance.enable = true;
+        PhysicsSystem2D.instance.debugDrawFlags = EPhysics2DDrawFlags.Aabb |
+            EPhysics2DDrawFlags.Pair |
+            EPhysics2DDrawFlags.CenterOfMass |
+            EPhysics2DDrawFlags.Joint |
+            EPhysics2DDrawFlags.Shape;
 
         this.schedule(this.enemyCreator, 1);
         // this.levelNodeLabel.string = "等级:0";
@@ -120,7 +119,8 @@ export class Main extends Component {
 
 
     initMap() {
-        this.orMap0.getLayer("Door").node.active = false;
+
+        this.orMap1.getChildByName("Door").active = false;
 
         const row = 4;
         const col = 7;
@@ -130,8 +130,6 @@ export class Main extends Component {
                 // this.orStaffBox.addChild(node);
             }
         }
-
-        // const wall = this.orMap0.getLayer("Wall");
     }
 
     initPool() {
@@ -156,7 +154,7 @@ export class Main extends Component {
             this.orJoyStick.active = false;
             const pos = this.orPlayer.node.parent.getComponent(UITransform).convertToNodeSpaceAR(this.orMain.worldPosition);
             this.orPlayer.node.setPosition(pos.x, pos.y);
-            this.orMap0.getLayer("Door").node.active = true;
+            this.orMap1.getChildByName("Door").active = true;
             this.towerPage.active = true;
             log(this.towerPage);
             this.gameStatus.active = true;
