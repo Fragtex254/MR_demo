@@ -45,7 +45,7 @@ export class Main extends Component {
     enemyNum: number = 0;
     gameState: GameStatusType = GameStatusType.Wait;
 
-    audioSource: AudioSource;
+    // audioSource: AudioSource;
 
     elecd: number = 1;
     elerate: number = 1;
@@ -59,7 +59,7 @@ export class Main extends Component {
         this.initMap();
         this.initPool();
 
-        this.audioSource = this.getComponent(AudioSource);
+        // this.audioSource = this.getComponent(AudioSource);
 
     }
 
@@ -78,7 +78,7 @@ export class Main extends Component {
         // this.levelNodeBarProgress.progress = 0;
         // this.curevel = 0;
         this.node.on('electricity', this.powerUp, this);
-        this.audioSource.play();
+        // this.audioSource.play();
 
         this.initGameStatus();
 
@@ -110,7 +110,7 @@ export class Main extends Component {
          * 或者状态没变但途中节点销毁也会导致这边的对象为空报错
          *  */
         if (this.orPlayer.isDead()) {
-            this.audioSource.stop();
+            // this.audioSource.stop();
             Player.enemiesInArea = [];
             this.gameOver.active = true;
             director.pause();
