@@ -1,4 +1,4 @@
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, Node, Prefab, instantiate, Vec3, Button } from 'cc';
 import { TowerBtn, TowerState } from './TowerBtn';
 const { ccclass, property } = _decorator;
 
@@ -13,14 +13,27 @@ export enum TowerType {
 @ccclass('PageView')
 export class PageView extends Component {
 
-    @property
+    @property(Prefab) itemPre: Prefab;
+    @property(Node) towerBtns: Node = null;
+    @property(Prefab) towerBtnPre: Prefab = null;
+    @property(Node) itemLayout:Node;
     callBtn: Node = null;
 
     isShowing: boolean = false;
 
 
     start() {
+        this.initTowerBtns();
+        this.node.active = false;       //wait for game start
+        
 
+        for (var i = 0; i < 4; i++)
+        {
+            let tempItem = instantiate(this.itemPre);
+            this.itemLayout.addChild(tempItem);
+            let tempItemBtn = tempItem.getChildByName("Button").getComponent(Button);
+            tempItemBtn.node.on(Button.EventType.CLICK, this.onBtnClick, this);
+        }
     }
 
     update(deltaTime: number) {
@@ -50,31 +63,20 @@ export class PageView extends Component {
     }
 
     onBtnClick(towerKey: TowerType | any) {
-        //todo:add more towerS
-        // switch (towerKey) {
-        //     case TowerType.MACHINE_GUN_TYPE:
-        //         {
-        //             this.callBtn.getComponent(TowerBtn).buildMachineGun();
-        //             console.log("BUild Machine Gun tower success!");
-        //             break;
-        //         }
-        //     case TowerType.OTHER_TYPE:
-        //         {
-        //             console.log("This type of tower will be supported in the future!");
-        //             break;
-        //         }
-        //     case TowerType.WRONG_TYPE:
-        //         {
-        //             console.error("Wrong tower typ!e");
-        //             break;
-        //         }
-        //     default:
-        //         console.log("Unknowen Tower Type!");
-        //         break;
-        // }
-
         this.callBtn.getComponent(TowerBtn).buildMachineGun();
         console.log("BUild Machine Gun tower success!");
+    }
+
+    initTowerBtns() {
+        var len = this.towerBtns.children.length;
+        for (var i = 0; i < len; i++) {
+
+            let tempNode = this.towerBtns.children[i];
+            let tempBtn = instantiate(this.towerBtnPre);
+            tempBtn.setParent(tempNode);
+            tempBtn.position = Vec3.ZERO;
+            tempBtn.getComponent(TowerBtn).SecondPage = this.node;
+        }
     }
 }
 

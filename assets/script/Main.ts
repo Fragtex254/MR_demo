@@ -29,7 +29,7 @@ export class Main extends Component {
     @property(Prefab) orBullet: Prefab;
     @property(Prefab) orStaff: Prefab;
     @property(Node) gameOver: Node;
-    @property(Node) towerPage: Node;
+    @property(Node) pageView: Node;
     @property(Node) gameStatus: Node;
 
     labelElectricity: Label = null;
@@ -82,7 +82,7 @@ export class Main extends Component {
 
         this.initGameStatus();
 
-        // this.towerPage.active = false;
+        this.pageView.active = false;
 
     }
 
@@ -155,8 +155,7 @@ export class Main extends Component {
             const pos = this.orPlayer.node.parent.getComponent(UITransform).convertToNodeSpaceAR(this.orMain.worldPosition);
             this.orPlayer.node.setPosition(pos.x, pos.y);
             this.orMap1.getChildByName("Door").active = true;
-            this.towerPage.active = true;
-            log(this.towerPage);
+            this.pageView.active = true;
             this.gameStatus.active = true;
         }
         if (this.gameState === GameStatusType.Start && this.elecd <= 0) {

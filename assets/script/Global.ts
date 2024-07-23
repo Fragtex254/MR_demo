@@ -8,6 +8,7 @@
  */
 import { Node } from "cc";
 import { Player } from "./Character/Player";
+import { Tower } from "./Character/Tower";
 
 export class Global {
     static player: Player;
@@ -42,4 +43,61 @@ export const enum PlayerState {
     IDLE,
     RUN,
     FIX,
+}
+
+
+export const enum ResType{
+    POWER,
+    STEEL
+}
+
+
+export class TowerConfigInfo{
+    iconPath:string;
+    buildCost:number;
+    resType:ResType;
+    towerDisc:string;
+    constructor(data)
+    {
+        this.iconPath = data.iconPath;
+        this.buildCost = data.buildCost;
+        this.resType = data.resType;
+        this.towerDisc = data.towerDisc;
+    }
+}
+
+export const enum TowerIndex {
+    MACHINE_GUN = 0,
+    POWER_STATION = 1,
+    STEEL_STATION = 2,
+    SATELLITE =3
+
+}
+
+const AllTowerConfigInfo = 
+{
+    [TowerIndex.MACHINE_GUN] : {
+        iconPath : "url",
+        buildCost : 4,
+        resType : ResType.POWER,
+        towerDisc : ""
+    },
+    [TowerIndex.POWER_STATION] : {
+        iconPath : "url",
+        buildCost : 4,
+        resType : ResType.POWER,
+        towerDisc : ""
+    },
+    [TowerIndex.STEEL_STATION] : {
+        iconPath : "url",
+        buildCost : 4,
+        resType : ResType.POWER,
+        towerDisc : ""
+    },
+    [TowerIndex.SATELLITE] : {
+        iconPath : "url",
+        buildCost : 4,
+        resType : ResType.POWER,
+        towerDisc : ""
+    },
 }
