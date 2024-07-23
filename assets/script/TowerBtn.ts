@@ -1,6 +1,6 @@
 import { _decorator, Component, Prefab, Node, instantiate, log, Vec3, Sprite } from 'cc';
 
-import { PageView } from './PageView';
+import { PageView } from './Page/PageView';
 const { ccclass, property } = _decorator;
 
 export enum TowerState {

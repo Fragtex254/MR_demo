@@ -1,6 +1,6 @@
 import { _decorator, Component, Node, Prefab, instantiate, Vec3, Button, resources, SpriteFrame, Sprite, log, Label } from 'cc';
-import { TowerBtn, TowerState } from './TowerBtn';
-import { TowerIndex, AllTowerConfigInfo, TowerConfigInfo,ResType } from './Global';
+import { TowerBtn, TowerState } from '../TowerBtn';
+import { TowerIndex, AllTowerConfigInfo, TowerConfigInfo, ResType } from '../Global';
 const { ccclass, property } = _decorator;
 
 
@@ -18,9 +18,17 @@ export class PageView extends Component {
     @property(Node) towerBtns: Node = null;
     @property(Prefab) towerBtnPre: Prefab = null;
     @property(Node) itemLayout: Node;
+    @property(Node) tabs: Node;
+    @property(Node) main:Node;
     callBtn: Node = null;
 
     isShowing: boolean = false;
+
+    itemBtnBuyStateStrs: Array<string> = ["可购买", "未拥有", "已拥有"];
+
+
+    //hard code here, should be changed to use a global array.
+    items:Array<Node> = new Array<Node>(4)
 
 
     start() {
@@ -35,18 +43,19 @@ export class PageView extends Component {
             let tempItemBtn = tempItem.getChildByName("Button").getComponent(Button);
             tempItemBtn.node.on(Button.EventType.CLICK, this.onBtnClick, this);
 
+            //set item icon
             resources.load(tempTowerConfigInfo.iconPath + "/spriteFrame", SpriteFrame, (err, spriteFrame) => {
                 tempItem.getChildByName("TowerIcon").getComponent(Sprite).spriteFrame = spriteFrame;
             });
             tempItem.getChildByName("towerDisc").getComponent(Label).string = tempTowerConfigInfo.towerDisc;
             tempItemBtn.getComponentInChildren(Label).string = tempTowerConfigInfo.buildCost.toString();
 
-            if(tempTowerConfigInfo.resType == ResType.NO_OWN)
-            {
-                
-            }
+            //change buy btn bg sprite with buyState
+            let tempSprite = tempItemBtn.node.getComponent(Sprite);
+            let tempAtlas = tempSprite.spriteAtlas;
+            tempSprite.spriteFrame = tempAtlas.getSpriteFrame(this.itemBtnBuyStateStrs[tempTowerConfigInfo.buyState]);
 
-
+            this.items.push(tempItem);
         }
     }
 
@@ -55,6 +64,9 @@ export class PageView extends Component {
             //todo:stop the game
         }
     }
+
+
+
 
     showPage() {
         if (this.isShowing != true) {

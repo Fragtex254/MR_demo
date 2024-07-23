@@ -52,17 +52,25 @@ export const enum ResType {
     NO_OWN,
 }
 
+export const enum BuyState{
+    AFFORD,
+    NO_AFFORD,
+    NO_OWN,
+}
+
 
 export class TowerConfigInfo {
     iconPath: string;
     buildCost: number;
     resType: ResType;
+    buyState:BuyState;
     towerDisc: string;
     constructor(data) {
         this.iconPath = data.iconPath;
         this.buildCost = data.buildCost;
         this.resType = data.resType;
         this.towerDisc = data.towerDisc;
+        this.buyState = data.buyState;
     }
 }
 
@@ -80,25 +88,29 @@ export const AllTowerConfigInfo =
         iconPath: "mr/towerIcon/machine_gun",
         buildCost: 8,
         resType: ResType.POWER,
-        towerDisc: "攻击力：4\n攻击距离：4"
+        towerDisc: "攻击力：4\n攻击距离：4",
+        buyState: BuyState.NO_AFFORD,
     },
     [TowerIndex.POWER_STATION]: {
         iconPath: "mr/towerIcon/power_station",
         buildCost: 200,
         resType: ResType.POWER,
-        towerDisc: "生产1闪电/2s"
+        towerDisc: "生产1闪电/2s",
+        buyState: BuyState.NO_AFFORD,
     },
     [TowerIndex.STEEL_STATION]: {
         iconPath: "mr/towerIcon/steel_station",
         buildCost: 8,
         resType: ResType.POWER,
-        towerDisc: "生产2钢材/1s"
+        towerDisc: "生产2钢材/1s",
+        buyState: BuyState.NO_AFFORD,
     },
     [TowerIndex.SATELLITE]: {
         iconPath: "mr/towerIcon/satellite_gun",
         buildCost: -1,
         resType: ResType.NO_OWN,
-        towerDisc: "攻击力：2\n攻击距离：12"
+        towerDisc: "攻击力：2\n攻击距离：12",
+        buyState: BuyState.NO_AFFORD,
     },
 }
 
