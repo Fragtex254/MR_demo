@@ -46,19 +46,19 @@ export const enum PlayerState {
 }
 
 
-export const enum ResType{
+export const enum ResType {
     POWER,
-    STEEL
+    STEEL,
+    NO_OWN,
 }
 
 
-export class TowerConfigInfo{
-    iconPath:string;
-    buildCost:number;
-    resType:ResType;
-    towerDisc:string;
-    constructor(data)
-    {
+export class TowerConfigInfo {
+    iconPath: string;
+    buildCost: number;
+    resType: ResType;
+    towerDisc: string;
+    constructor(data) {
         this.iconPath = data.iconPath;
         this.buildCost = data.buildCost;
         this.resType = data.resType;
@@ -70,34 +70,35 @@ export const enum TowerIndex {
     MACHINE_GUN = 0,
     POWER_STATION = 1,
     STEEL_STATION = 2,
-    SATELLITE =3
+    SATELLITE = 3
 
 }
 
-const AllTowerConfigInfo = 
+export const AllTowerConfigInfo =
 {
-    [TowerIndex.MACHINE_GUN] : {
-        iconPath : "url",
-        buildCost : 4,
-        resType : ResType.POWER,
-        towerDisc : ""
+    [TowerIndex.MACHINE_GUN]: {
+        iconPath: "mr/towerIcon/machine_gun",
+        buildCost: 8,
+        resType: ResType.POWER,
+        towerDisc: "攻击力：4\n攻击距离：4"
     },
-    [TowerIndex.POWER_STATION] : {
-        iconPath : "url",
-        buildCost : 4,
-        resType : ResType.POWER,
-        towerDisc : ""
+    [TowerIndex.POWER_STATION]: {
+        iconPath: "mr/towerIcon/power_station",
+        buildCost: 200,
+        resType: ResType.POWER,
+        towerDisc: "生产1闪电/2s"
     },
-    [TowerIndex.STEEL_STATION] : {
-        iconPath : "url",
-        buildCost : 4,
-        resType : ResType.POWER,
-        towerDisc : ""
+    [TowerIndex.STEEL_STATION]: {
+        iconPath: "mr/towerIcon/steel_station",
+        buildCost: 8,
+        resType: ResType.POWER,
+        towerDisc: "生产2钢材/1s"
     },
-    [TowerIndex.SATELLITE] : {
-        iconPath : "url",
-        buildCost : 4,
-        resType : ResType.POWER,
-        towerDisc : ""
+    [TowerIndex.SATELLITE]: {
+        iconPath: "mr/towerIcon/satellite_gun",
+        buildCost: -1,
+        resType: ResType.NO_OWN,
+        towerDisc: "攻击力：2\n攻击距离：12"
     },
 }
+

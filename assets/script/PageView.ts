@@ -1,5 +1,6 @@
-import { _decorator, Component, Node, Prefab, instantiate, Vec3, Button } from 'cc';
+import { _decorator, Component, Node, Prefab, instantiate, Vec3, Button, resources, SpriteFrame, Sprite, log, Label } from 'cc';
 import { TowerBtn, TowerState } from './TowerBtn';
+import { TowerIndex, AllTowerConfigInfo, TowerConfigInfo,ResType } from './Global';
 const { ccclass, property } = _decorator;
 
 
@@ -16,7 +17,7 @@ export class PageView extends Component {
     @property(Prefab) itemPre: Prefab;
     @property(Node) towerBtns: Node = null;
     @property(Prefab) towerBtnPre: Prefab = null;
-    @property(Node) itemLayout:Node;
+    @property(Node) itemLayout: Node;
     callBtn: Node = null;
 
     isShowing: boolean = false;
@@ -25,14 +26,27 @@ export class PageView extends Component {
     start() {
         this.initTowerBtns();
         this.node.active = false;       //wait for game start
-        
+        for (var i = 0; i < 4; i++) {
 
-        for (var i = 0; i < 4; i++)
-        {
             let tempItem = instantiate(this.itemPre);
             this.itemLayout.addChild(tempItem);
+
+            let tempTowerConfigInfo: TowerConfigInfo = AllTowerConfigInfo[i];
             let tempItemBtn = tempItem.getChildByName("Button").getComponent(Button);
             tempItemBtn.node.on(Button.EventType.CLICK, this.onBtnClick, this);
+
+            resources.load(tempTowerConfigInfo.iconPath + "/spriteFrame", SpriteFrame, (err, spriteFrame) => {
+                tempItem.getChildByName("TowerIcon").getComponent(Sprite).spriteFrame = spriteFrame;
+            });
+            tempItem.getChildByName("towerDisc").getComponent(Label).string = tempTowerConfigInfo.towerDisc;
+            tempItemBtn.getComponentInChildren(Label).string = tempTowerConfigInfo.buildCost.toString();
+
+            if(tempTowerConfigInfo.resType == ResType.NO_OWN)
+            {
+                
+            }
+
+
         }
     }
 
@@ -78,6 +92,9 @@ export class PageView extends Component {
             tempBtn.getComponent(TowerBtn).SecondPage = this.node;
         }
     }
+
+
+
 }
 
 
