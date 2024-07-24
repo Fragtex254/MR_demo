@@ -49,11 +49,11 @@ export const enum PlayerState {
 export const enum ResType {
     POWER,
     STEEL,
-    NO_OWN,
+    BAG,
 }
 
 export const enum BuyState{
-    AFFORD,
+    CAN_AFFORD,
     NO_AFFORD,
     NO_OWN,
 }
@@ -108,9 +108,9 @@ export const AllTowerConfigInfo =
     [TowerIndex.SATELLITE]: {
         iconPath: "mr/towerIcon/satellite_gun",
         buildCost: -1,
-        resType: ResType.NO_OWN,
+        resType: ResType.BAG,
         towerDisc: "攻击力：2\n攻击距离：12",
-        buyState: BuyState.NO_AFFORD,
+        buyState: BuyState.NO_OWN,
     },
 }
 

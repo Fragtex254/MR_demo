@@ -7,10 +7,11 @@ import { GameStatusType, Global } from './Global';
  * @FilePath: /ocean_roguelike/assets/script/Main.ts
  * @Description: 注释信息
  */
-import { _decorator, AudioSource, Component, log, director, instantiate, Label, Node, NodeSpace, PhysicsSystem2D, Prefab, ProgressBar, random,EPhysics2DDrawFlags, randomRangeInt, TiledMap, UITransform, v2, v3, } from 'cc';
+import { _decorator, AudioSource, Component, log, director, instantiate, Label, Node, NodeSpace, PhysicsSystem2D, Prefab, ProgressBar, random, EPhysics2DDrawFlags, randomRangeInt, TiledMap, UITransform, v2, v3, } from 'cc';
 import getPlayerLevelState, { LevelId } from './PlayerLevelConfig';
 import { Player } from './Character/Player';
 import { GameStatus } from './GameStatus';
+import { ResType } from './Global';
 const { ccclass, property } = _decorator;
 
 
@@ -37,6 +38,7 @@ export class Main extends Component {
     labelBattleCount: Label = null;
 
     electricity: number = 0;              //电力
+    steel: number = 0;                    //钢材
     time: number = 60;                //剩余时间
     curBattleCount: number = 1;      //当前波次
     totalBattleCount: number = 10;   //总波次
@@ -117,6 +119,16 @@ export class Main extends Component {
         }
     }
 
+    getCurRes(type: ResType) {
+        switch (type) {
+            case ResType.POWER: {
+                return this.electricity;
+            }
+            case ResType.STEEL: {
+                return this.steel;
+            }
+        }
+    }
 
     initMap() {
 
