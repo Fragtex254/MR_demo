@@ -50,7 +50,7 @@ export class Main extends Component {
     // audioSource: AudioSource;
 
     elecd: number = 0.25;
-    elerate: number = 5;
+    elerate: number = 50;
     nodePool = new Map();
 
     protected onLoad(): void {

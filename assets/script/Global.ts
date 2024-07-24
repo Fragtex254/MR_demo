@@ -88,35 +88,35 @@ export const AllTowerConfigInfo =
 {
     [TowerType.MACHINE_GUN]: {
         iconPath: "mr/towerIcon/machine_gun",
-        buildCost: 8,
+        buildCost: 10,
         resType: ResType.POWER,
         towerDisc: "攻击力：4\n攻击距离：4",
         buyState: BuyState.NO_AFFORD,
         towerType: TowerType.MACHINE_GUN,
     },
     [TowerType.POWER_STATION]: {
-        iconPath: "mr/towerIcon/power_station",
-        buildCost: 200,
+        iconPath: "mr/towerIcon/技能图标",
+        buildCost: 50,
         resType: ResType.POWER,
-        towerDisc: "生产1闪电/2s",
+        towerDisc: "攻击力：5\n攻击距离：10",
         buyState: BuyState.NO_AFFORD,
         towerType: TowerType.POWER_STATION,
 
     },
     [TowerType.STEEL_STATION]: {
-        iconPath: "mr/towerIcon/steel_station",
-        buildCost: 8,
+        iconPath: "mr/towerIcon/技能图标3",
+        buildCost: 50,
         resType: ResType.POWER,
-        towerDisc: "生产2钢材/1s",
+        towerDisc: "攻击力：8\n攻击距离：5",
         buyState: BuyState.NO_AFFORD,
         towerType: TowerType.STEEL_STATION,
 
     },
     [TowerType.SATELLITE]: {
-        iconPath: "mr/towerIcon/satellite_gun",
+        iconPath: "mr/towerIcon/power_station",
         buildCost: -1,
         resType: ResType.BAG,
-        towerDisc: "攻击力：2\n攻击距离：12",
+        towerDisc: "每次产生电力:\n1 → 2",
         buyState: BuyState.NO_OWN,
         towerType: TowerType.SATELLITE,
 
