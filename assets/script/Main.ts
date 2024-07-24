@@ -49,8 +49,8 @@ export class Main extends Component {
 
     // audioSource: AudioSource;
 
-    elecd: number = 1;
-    elerate: number = 1;
+    elecd: number = 0.25;
+    elerate: number = 5;
     nodePool = new Map();
 
     protected onLoad(): void {
@@ -80,6 +80,12 @@ export class Main extends Component {
         // this.levelNodeBarProgress.progress = 0;
         // this.curevel = 0;
         this.node.on('electricity', this.powerUp, this);
+
+        this.node.on('ResConsume', function (res: ResType, count: number) {
+            log("[CJH]:receive ResConsume message!");
+            this.onUseConsumeRes(res, count);
+        },this);
+
         // this.audioSource.play();
 
         this.initGameStatus();
@@ -225,127 +231,20 @@ export class Main extends Component {
 
     }
 
-    // addScore() {
-    //     this.score += 10;
-    //     this.exp += 10;
 
-    //     let svalue = this.node.getChildByName("Status").getChildByName("Score").getChildByName("Value");
-    //     let svalueLabel = svalue.getComponent(Label);
-    //     svalueLabel.string = this.score.toString();
-
-    //     if (this.exp < 50) {
-    //         if (this.curevel != 0) {
-    //             this.curevel = 0;
-    //             this.orPlayer.currentPlayerState = getPlayerLevelState(LevelId.lv0);
-    //         }
-    //         this.levelNodeBarProgress.progress = this.exp / this.orPlayer.currentPlayerState.nextLvexp;
-    //     }
-    //     else if (this.exp < 50 + 100) {
-    //         if (this.curevel != 1) {
-    //             this.curevel = 1;
-    //             this.orPlayer.currentPlayerState = getPlayerLevelState(LevelId.lv1);
-    //             this.showSelectSkill();
-    //         }
-    //         this.levelNodeBarProgress.progress = (this.exp - 50) / this.orPlayer.currentPlayerState.nextLvexp;
-    //     }
-    //     else if (this.exp < 50 + 100 + 250) {
-    //         if (this.curevel != 2) {
-    //             this.curevel = 2;
-    //             this.orPlayer.currentPlayerState = getPlayerLevelState(LevelId.lv2);
-    //             this.showSelectSkill();
-    //         }
-    //         this.levelNodeBarProgress.progress = (this.exp - 50 - 100) / this.orPlayer.currentPlayerState.nextLvexp;
-    //     }
-    //     else if (this.exp < 50 + 100 + 250 + 450) {
-    //         if (this.curevel != 3) {
-    //             this.curevel = 3;
-    //             this.orPlayer.currentPlayerState = getPlayerLevelState(LevelId.lv3);
-    //             this.showSelectSkill();
-    //         }
-    //         this.levelNodeBarProgress.progress = (this.exp - 50 - 100 - 250) / this.orPlayer.currentPlayerState.nextLvexp;
-    //     }
-    //     else if (this.exp < 50 + 100 + 250 + 450 + 700) {
-    //         if (this.curevel != 4) {
-    //             this.curevel = 4;
-    //             this.orPlayer.currentPlayerState = getPlayerLevelState(LevelId.lv4);
-    //             this.showSelectSkill();
-    //         }
-    //         this.levelNodeBarProgress.progress = (this.exp - 50 - 100 - 250 - 450) / this.orPlayer.currentPlayerState.nextLvexp;
-    //     }
-    //     else if (this.exp < 50 + 100 + 250 + 450 + 700 + 1000) {
-    //         if (this.curevel != 5) {
-    //             this.curevel = 5;
-    //             this.orPlayer.currentPlayerState = getPlayerLevelState(LevelId.lv5);
-    //             this.showSelectSkill();
-    //         }
-    //         this.levelNodeBarProgress.progress = (this.exp - 50 - 100 - 250 - 450 - 700) / this.orPlayer.currentPlayerState.nextLvexp;
-    //     }
-    //     else if (this.exp < 50 + 100 + 250 + 450 + 700 + 1000 + 1400) {
-    //         if (this.curevel != 6) {
-    //             this.curevel = 6;
-    //             this.orPlayer.currentPlayerState = getPlayerLevelState(LevelId.lv6);
-    //             this.showSelectSkill();
-    //         }
-    //         this.levelNodeBarProgress.progress = (this.exp - 50 - 100 - 250 - 450 - 700 - 1000) / this.orPlayer.currentPlayerState.nextLvexp;
-    //     }
-    //     else if (this.exp < 50 + 100 + 250 + 450 + 700 + 1000 + 1400 + 2000) {
-    //         if (this.curevel != 7) {
-    //             this.curevel = 7;
-    //             this.orPlayer.currentPlayerState = getPlayerLevelState(LevelId.lv7);
-    //             this.showSelectSkill();
-    //         }
-    //         this.levelNodeBarProgress.progress = (this.exp - 50 - 100 - 250 - 450 - 700 - 1000 - 1400) / this.orPlayer.currentPlayerState.nextLvexp;
-    //     }
-    //     else if (this.exp < 50 + 100 + 250 + 450 + 700 + 1000 + 1400 + 2000 + 3000) {
-    //         if (this.curevel != 8) {
-    //             this.curevel = 8;
-    //             this.orPlayer.currentPlayerState = getPlayerLevelState(LevelId.lv8);
-    //             this.showSelectSkill();
-    //         }
-    //         this.levelNodeBarProgress.progress = (this.exp - 50 - 100 - 250 - 450 - 700 - 1000 - 1400 - 2000) % this.orPlayer.currentPlayerState.nextLvexp;
-    //     }
-    //     else {
-    //         this.orPlayer.currentPlayerState = getPlayerLevelState(LevelId.lv9);
-    //     }
-    //     this.levelNodeLabel.string = this.orPlayer.currentPlayerState.lv == 9 ? "满级" : "等级:" + this.orPlayer.currentPlayerState.lv.toString();
-
-    // }
-
-    // showSelectSkill() {
-    //     console.log("升级啦，可以开始选择技能了");
-    //     let lvNode = instantiate(this.orLevelUp);
-    //     director.pause();
-    //     this.node.addChild(lvNode);
-
-    //     let skillBtn01 = lvNode.getChildByName("Layout").getChildByName("Skill01");
-    //     let skillBtn02 = lvNode.getChildByName("Layout").getChildByName("Skill02");
-    //     let skillBtn03 = lvNode.getChildByName("Layout").getChildByName("Skill03");
-
-    //     skillBtn01.on("click", () => {
-    //         console.log("技能1被选取");
-    //         // 实现给player state的 damge, speed,进行状态加成
-    //         // todo...
-    //         lvNode.destroy();
-    //         director.resume();
-    //     }, this);
-
-    //     skillBtn02.on("click", () => {
-    //         console.log("技能2被选取")
-    //         // 实现给player state的 damge, speed,进行状态加成
-    //         // todo...
-
-    //         lvNode.destroy();
-    //         director.resume();
-    //     }, this);
-
-    //     skillBtn03.on("click", () => {
-    //         console.log("技能3被选取", this.node);
-    //         // 可自行实现给player state的 damge, speed,进行状态加成
-    //         // todo...
-    //         lvNode.destroy();
-    //         director.resume();
-    //     }, this);
-    // }
+    onUseConsumeRes(type: ResType, count: number) {
+        log("onUseConsumeRes")
+        switch (type) {
+            case ResType.POWER:
+                {
+                    this.electricity -= count;
+                }
+            case ResType.STEEL:
+                {
+                    this.steel -= count;
+                }
+        }
+    }
 }
 
 

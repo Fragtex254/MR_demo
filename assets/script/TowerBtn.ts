@@ -64,12 +64,18 @@ export class TowerBtn extends Component {
 
     buildPowerStation(){
         console.error("No for now");
+        this.SecondPage.getComponent(PageView).closePage();     //建造完毕后会关闭
+        this.SecondPage = null;
     }
     buildSteelStation(){
         console.error("No for now");
+        this.SecondPage.getComponent(PageView).closePage();     //建造完毕后会关闭
+        this.SecondPage = null;
     }
     buildSatelliteStation(){
         console.error("No for now");
+        this.SecondPage.getComponent(PageView).closePage();     //建造完毕后会关闭
+        this.SecondPage = null;
     }
 }
 

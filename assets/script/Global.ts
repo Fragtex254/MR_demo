@@ -65,16 +65,18 @@ export class TowerConfigInfo {
     resType: ResType;
     buyState:BuyState;
     towerDisc: string;
+    towerType:TowerType;
     constructor(data) {
         this.iconPath = data.iconPath;
         this.buildCost = data.buildCost;
         this.resType = data.resType;
         this.towerDisc = data.towerDisc;
         this.buyState = data.buyState;
+        this.towerType = data.towerType;
     }
 }
 
-export const enum TowerIndex {
+export const enum TowerType {
     MACHINE_GUN = 0,
     POWER_STATION = 1,
     STEEL_STATION = 2,
@@ -84,33 +86,40 @@ export const enum TowerIndex {
 
 export const AllTowerConfigInfo =
 {
-    [TowerIndex.MACHINE_GUN]: {
+    [TowerType.MACHINE_GUN]: {
         iconPath: "mr/towerIcon/machine_gun",
         buildCost: 8,
         resType: ResType.POWER,
         towerDisc: "攻击力：4\n攻击距离：4",
         buyState: BuyState.NO_AFFORD,
+        towerType: TowerType.MACHINE_GUN,
     },
-    [TowerIndex.POWER_STATION]: {
+    [TowerType.POWER_STATION]: {
         iconPath: "mr/towerIcon/power_station",
         buildCost: 200,
         resType: ResType.POWER,
         towerDisc: "生产1闪电/2s",
         buyState: BuyState.NO_AFFORD,
+        towerType: TowerType.POWER_STATION,
+
     },
-    [TowerIndex.STEEL_STATION]: {
+    [TowerType.STEEL_STATION]: {
         iconPath: "mr/towerIcon/steel_station",
         buildCost: 8,
         resType: ResType.POWER,
         towerDisc: "生产2钢材/1s",
         buyState: BuyState.NO_AFFORD,
+        towerType: TowerType.STEEL_STATION,
+
     },
-    [TowerIndex.SATELLITE]: {
+    [TowerType.SATELLITE]: {
         iconPath: "mr/towerIcon/satellite_gun",
         buildCost: -1,
         resType: ResType.BAG,
         towerDisc: "攻击力：2\n攻击距离：12",
         buyState: BuyState.NO_OWN,
+        towerType: TowerType.SATELLITE,
+
     },
 }
 

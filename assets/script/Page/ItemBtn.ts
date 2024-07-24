@@ -1,5 +1,5 @@
-import { _decorator, Component, Node, Sprite, log } from 'cc';
-import { BuyState, ResType } from '../Global';
+import { _decorator, Component, Node, Sprite, log, Button, error, find } from 'cc';
+import { BuyState, ResType, TowerType } from '../Global';
 import { PageView } from './PageView';
 const { ccclass, property } = _decorator;
 
@@ -10,20 +10,27 @@ export class ItemBtn extends Component {
     curBuyState: BuyState = BuyState.NO_AFFORD;
     resType: ResType = ResType.BAG;
     curRes: number = 0;
-    PageView: Node = null;
+    pageViewNode: Node = null;
     cost: number = -1;
+    towerType: TowerType;
 
-    static itemBtnBuyStateStrs: Array<string> = ["可购买", "已拥有","未拥有"];
+    mainNode:Node;
 
+    static itemBtnBuyStateStrs: Array<string> = ["可购买", "已拥有", "未拥有"];
+
+
+    protected onLoad(): void {
+        this.node.on(Button.EventType.CLICK, this.build, this);
+    }
 
     start() {
-
+        this.mainNode= find("Canvas");
     }
 
     update(deltaTime: number) {
-        if (this.cost == -1 && this.curBuyState != BuyState.NO_OWN) {
-            console.error("You have forgot to set itemBtn cost Please set it!");
-        }
+        // if (this.cost == -1 && this.curBuyState != BuyState.NO_OWN) {
+        //     console.error("You have forgot to set itemBtn cost Please set it!");
+        // }
 
         this.refreshCurRes();
         if (this.oldBuyState != this.curBuyState) {
@@ -42,7 +49,7 @@ export class ItemBtn extends Component {
     }
 
     refreshCurRes() {
-        this.curRes = this.PageView.getComponent(PageView).getCurRes(this.resType);
+        this.curRes = this.pageViewNode.getComponent(PageView).getCurRes(this.resType);
         if (this.curRes >= this.cost) {
             this.curBuyState = BuyState.CAN_AFFORD;
         }
@@ -55,6 +62,24 @@ export class ItemBtn extends Component {
     refreshBtn() {
         let SpAl = this.node.getComponent(Sprite).spriteAtlas;
         this.node.getComponent(Sprite).spriteFrame = SpAl.getSpriteFrame(ItemBtn.itemBtnBuyStateStrs[this.curBuyState]);
+    }
+
+    build() {
+        log("[CJH]:item btn is clicked")
+        if (this.curBuyState != BuyState.NO_OWN) {
+            if (this.curRes >= this.cost) {
+
+                log(this.pageViewNode);
+                this.pageViewNode.emit('Build', this.towerType);
+                this.mainNode.emit('ResConsume', this.resType, this.cost);
+            }
+            else {
+                error("资源不足，不能完成购买");
+            }
+        }
+        else {
+            error("暂未拥有当前物品");
+        }
     }
 }
 
